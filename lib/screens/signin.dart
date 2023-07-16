@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sample_diary/screens/home.dart';
 import 'package:sample_diary/screens/singup.dart';
 
@@ -35,7 +37,42 @@ class _SignInState extends State<SignIn>
       curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn),
     ));
   }
+  void signInWithGoogle() async {
+    print("call sign in");
 
+    try {
+      print("call google login");
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user;
+
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      if(googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken
+        );
+        try{
+          final UserCredential userCredential = await auth.signInWithCredential(credential);
+          user = userCredential.user;
+        } on FirebaseAuthException catch (e) {
+          print(e);
+        } catch(e){
+          print(e);
+        }
+      }
+
+    } on FirebaseAuthException catch(e) {
+      // if(e.code == 'Account exist with different credentials') {
+      //
+      // }
+      print(e);
+    }catch(e) {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -169,17 +206,23 @@ class _SignInState extends State<SignIn>
                         Container(
                           height: 40.0,
                           color: Colors.transparent,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                          child: InkWell(
+                            onTap: (){
+                              signInWithGoogle();
 
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                  style: BorderStyle.solid,
+                                  width: 1.0,
+                                ),
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: const Text("Google Signin"),
+                            ),
                           ),
                         )
                       ],

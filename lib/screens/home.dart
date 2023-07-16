@@ -4,6 +4,9 @@ import 'package:sample_diary/screens/achievement.dart';
 import 'package:sample_diary/screens/calendar.dart';
 import 'package:sample_diary/screens/certificate.dart';
 import 'package:sample_diary/screens/map.dart';
+import 'package:sample_diary/screens/notes.dart';
+import 'package:sample_diary/screens/todo_item.dart';
+import 'package:sample_diary/screens/todolist.dart';
 
 void main() => runApp(MaterialApp(
   home: RadialMenuIcons(),
@@ -46,15 +49,15 @@ class RadialMenuIcons extends StatelessWidget {
             onPress: () => Navigator.push(
                 context, MaterialPageRoute(builder: (_) => AchievementPage()))),
         RadialButton(
-            icon: Icon(Icons.notes_rounded),
+            icon: Icon(Icons.task),
             buttonColor: Colors.pink,
             onPress: () => Navigator.push(
-                context, MaterialPageRoute(builder: (_) => TargetScreen()))),
+                context, MaterialPageRoute(builder: (_) => Home()))),
         RadialButton(
-            icon: Icon(Icons.area_chart),
+            icon: Icon(Icons.note_alt),
             buttonColor: Colors.indigo,
             onPress: () => Navigator.push(
-                context, MaterialPageRoute(builder: (_) => TargetScreen()))),
+                context, MaterialPageRoute(builder: (_) => NotesPage()))),
 
       ]
       ),
