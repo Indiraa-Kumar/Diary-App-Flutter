@@ -7,11 +7,10 @@ import 'package:sample_diary/screens/singup.dart';
 
 class SignIn extends StatefulWidget {
   @override
-  _SignInState createState() => new _SignInState();
+  _SignInState createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn>
-    with SingleTickerProviderStateMixin {
+class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   late Animation animation, delayedAnimation, muchDelayedAnimation;
   late AnimationController animationController;
 
@@ -19,7 +18,7 @@ class _SignInState extends State<SignIn>
   void initState() {
     super.initState();
     animationController =
-        AnimationController(duration: Duration(seconds: 3), vsync: this);
+        AnimationController(duration: const Duration(seconds: 3), vsync: this);
     // it flying from left side towards center
     // -ve value mean it start from left side
     animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
@@ -37,42 +36,43 @@ class _SignInState extends State<SignIn>
       curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn),
     ));
   }
-  void signInWithGoogle() async {
-    print("call sign in");
 
+  void signInWithGoogle() async {
     try {
       print("call google login");
       FirebaseAuth auth = FirebaseAuth.instance;
       User? user;
 
       final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      if(googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication.accessToken,
-          idToken: googleSignInAuthentication.idToken
-        );
-        try{
-          final UserCredential userCredential = await auth.signInWithCredential(credential);
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken);
+        try {
+          final UserCredential userCredential =
+              await auth.signInWithCredential(credential);
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
           print(e);
-        } catch(e){
+        } catch (e) {
           print(e);
         }
       }
-
-    } on FirebaseAuthException catch(e) {
+    } on FirebaseAuthException catch (e) {
       // if(e.code == 'Account exist with different credentials') {
       //
       // }
       print(e);
-    }catch(e) {
+    } catch (e) {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -88,37 +88,15 @@ class _SignInState extends State<SignIn>
                 Transform(
                   transform: Matrix4.translationValues(
                       animation.value * width, 0.0, 0.0),
-                  child: Container(
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                          child: Text(
-                            'WELCOME',
-                            style: TextStyle(
-                                fontSize: 50.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                          child: Text(
-                            'BACK',
-                            style: TextStyle(
-                                fontSize: 50.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(145.0, 175.0, 0.0, 0.0),
-                          child: Text(
-                            '.',
-                            style: TextStyle(
-                              fontSize: 50.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        )
-                      ],
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
+                    child: Center(
+                      child: Text(
+                        'MY DIARY',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 50.0, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
@@ -127,7 +105,7 @@ class _SignInState extends State<SignIn>
                       delayedAnimation.value * width, 0.0, 0.0),
                   child: Container(
                     padding:
-                    EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
+                        EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
                     child: Column(
                       children: <Widget>[
                         TextField(
@@ -185,9 +163,9 @@ class _SignInState extends State<SignIn>
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => RadialMenuIcons(),
+                                      builder: (context) =>
+                                          const RadialMenuIcons(),
                                     ));
-
                               },
                               child: Center(
                                 child: Text(
@@ -202,14 +180,28 @@ class _SignInState extends State<SignIn>
                             ),
                           ),
                         ),
-                        SizedBox(height: 20.0),
-                        Container(
+                        const SizedBox(height: 20.0),
+                        ActionChip(
+                          avatar: Image.asset('images/google.png'),
+                          label: const Text("Google Sign-In"),
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                color: Colors.black,
+                                style: BorderStyle.solid,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(20.0)),
+                          onPressed: () {
+                            signInWithGoogle();
+                          },
+                        ),
+                        /*  Container(
                           height: 40.0,
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: (){
+                            onTap: () {
                               signInWithGoogle();
-
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -224,7 +216,7 @@ class _SignInState extends State<SignIn>
                               child: const Text("Google Signin"),
                             ),
                           ),
-                        )
+                        ) */
                       ],
                     ),
                   ),

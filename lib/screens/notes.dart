@@ -3,8 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'NotesPage.dart';
 
-
-
 class NotesPage extends StatefulWidget {
   NotesPage({Key? key}) : super(key: key);
 
@@ -32,12 +30,16 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: notesHeader(),
+        title: const Text("Notes"),
       ),
-      body: noteHeading.length > 0
+      body: noteHeading.isNotEmpty
           ? buildNotes()
-          : Center(child: Text("Add a New Diary")),
+          : const Center(child: Text('No notes has been added...',
+        style: TextStyle(
+          fontStyle: FontStyle.italic,
+          fontSize: 18,
+        ),
+      ),),
       floatingActionButton: FloatingActionButton(
         mini: false,
         backgroundColor: Colors.blueAccent,
@@ -56,12 +58,12 @@ class _NotesPageState extends State<NotesPage> {
         left: 10,
         right: 10,
       ),
-      child: new ListView.builder(
+      child: ListView.builder(
         itemCount: noteHeading.length,
         itemBuilder: (context, int index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 5.5),
-            child: new Dismissible(
+            child: Dismissible(
               key: UniqueKey(),
               direction: DismissDirection.horizontal,
               onDismissed: (direction) {
@@ -69,12 +71,12 @@ class _NotesPageState extends State<NotesPage> {
                   noteHeading.removeAt(index);
                   noteDescription.removeAt(index);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    new SnackBar(
+                    const SnackBar(
                       backgroundColor: Colors.purple,
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          new Text(
+                          Text(
                             "Diary deleted",
                             style: TextStyle(),
                           ),
@@ -88,10 +90,10 @@ class _NotesPageState extends State<NotesPage> {
                 borderRadius: BorderRadius.circular(5.5),
                 child: Container(
                   color: Colors.red,
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
+                      padding: EdgeInsets.only(right: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -132,7 +134,7 @@ class _NotesPageState extends State<NotesPage> {
             children: [
               new Container(
                 color:
-                noteMarginColor[(index % noteMarginColor.length).floor()],
+                    noteMarginColor[(index % noteMarginColor.length).floor()],
                 width: 3.5,
                 height: double.infinity,
               ),
@@ -173,7 +175,7 @@ class _NotesPageState extends State<NotesPage> {
                           ),
                         ),
                         onTap: () {
-                          _showDiaryDetails(context, index);
+                          _settingModalBottomSheet(context, index);
                         },
                       ),
                     ],
@@ -243,7 +245,7 @@ class _NotesPageState extends State<NotesPage> {
                               if (_formKey.currentState!.validate()) {
                                 setState(() {
                                   noteDescription[index] =
-                                  (noteDescriptionController.text);
+                                      (noteDescriptionController.text);
                                   noteDescriptionController.clear();
                                 });
                                 Navigator.pop(context);
@@ -289,7 +291,191 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  void _settingModalBottomSheet(context) {
+  void _settingModalBottomSheet(BuildContext context, [int index = -1]) {
+    if (index == -1) {
+      noteHeadingController.clear();
+      noteDescriptionController.clear();
+    } else {
+      date.add(formatter.format(now));
+      noteHeadingController.text = noteHeading[index];
+      noteDescriptionController.text = noteDescription[index];
+    }
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (contexxt) {
+          return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: DraggableScrollableSheet(
+                  initialChildSize: 0.6,
+                  maxChildSize: 0.6,
+                  minChildSize: 0.3,
+                  builder: (_, controller) {
+                    return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                          color: Colors.white,
+                        ),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {},
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 25, right: 25),
+                            child: Form(
+                              key: _formKey,
+                              child: SingleChildScrollView(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight:
+                                        (MediaQuery.of(context).size.height),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 250, top: 50),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              index == -1
+                                                  ? "New Diary"
+                                                  : "Diary - Edit",
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              child: const Row(
+                                                children: [
+                                                  Text(
+                                                    "Save",
+                                                    style: TextStyle(
+                                                      fontSize: 20.00,
+                                                      color: Colors.blue,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              onTap: () {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  setState(() {
+                                                    if (index == -1) {
+                                                      date.add(formatter
+                                                          .format(now));
+                                                      noteHeading.add(
+                                                          noteHeadingController
+                                                              .text);
+                                                      noteDescription.add(
+                                                          noteDescriptionController
+                                                              .text);
+                                                    } else {
+                                                      noteDescription[index] =
+                                                          (noteDescriptionController
+                                                              .text);
+                                                      noteHeading[index] =
+                                                          (noteHeadingController
+                                                              .text);
+                                                    }
+                                                    noteHeadingController
+                                                        .clear();
+                                                    noteDescriptionController
+                                                        .clear();
+                                                  });
+                                                  Navigator.pop(context);
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(
+                                          color: Colors.blueAccent,
+                                          thickness: 2.5,
+                                        ),
+                                        TextFormField(
+                                          maxLength: notesHeaderMaxLenth,
+                                          controller: noteHeadingController,
+                                          decoration: const InputDecoration(
+                                            hintText:
+                                                "Heading of your Diary...",
+                                            hintStyle: TextStyle(
+                                              fontSize: 15.00,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            prefixIcon: Icon(Icons.text_fields),
+                                          ),
+                                          validator: (String? noteHeading) {
+                                            if (noteHeading!.isEmpty) {
+                                              return "Please enter Note Heading";
+                                            } else if (noteHeading
+                                                .startsWith(" ")) {
+                                              return "Please avoid whitespaces";
+                                            }
+                                          },
+                                          onFieldSubmitted: (String value) {
+                                            FocusScope.of(context).requestFocus(
+                                                textSecondFocusNode);
+                                          },
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 15),
+                                          child: Container(
+                                            margin: const EdgeInsets.all(1),
+                                            height: 5 * 24.0,
+                                            child: TextFormField(
+                                              focusNode: textSecondFocusNode,
+                                              maxLines:
+                                                  notesDescriptionMaxLines,
+                                              maxLength: 200,
+                                              controller:
+                                                  noteDescriptionController,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: 'Description',
+                                                hintStyle: TextStyle(
+                                                  fontSize: 15.00,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              validator:
+                                                  (String? noteDescription) {
+                                                if (noteDescription!.isEmpty) {
+                                                  return "Please enter Note Desc";
+                                                } else if (noteDescription
+                                                    .startsWith(" ")) {
+                                                  return "Please avoid whitespaces";
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ));
+                  }));
+        });
+  }
+  /* 
+    );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // full height on screen
@@ -424,42 +610,43 @@ class _NotesPageState extends State<NotesPage> {
       },
     );
   }
-}
+} */
 
-Widget notesHeader() {
-  return Padding(
-    padding: const EdgeInsets.only(
-      top: 10,
-      left: 2.5,
-      right: 2.5,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          height: 40,
-          width: 40,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset('images/profile_pic.jpg'),
+  Widget notesHeader() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 10,
+        left: 2.5,
+        right: 2.5,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset('images/profile_pic.png'),
+            ),
           ),
-        ),
-        SizedBox(
-          width: 20.0,
-        ),
-        Text(
-          "My Diary",
-          style: TextStyle(
-            //color: Colors.blueAccent,
-            fontSize: 25.00,
-            fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 20.0,
           ),
-        ),
-        Divider(
-          color: Colors.blueAccent,
-          thickness: 2.5,
-        ),
-      ],
-    ),
-  );
+          Text(
+            "My Diary",
+            style: TextStyle(
+              //color: Colors.blueAccent,
+              fontSize: 25.00,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Divider(
+            color: Colors.blueAccent,
+            thickness: 2.5,
+          ),
+        ],
+      ),
+    );
+  }
 }

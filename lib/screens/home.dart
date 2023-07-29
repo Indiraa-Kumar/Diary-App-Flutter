@@ -5,13 +5,8 @@ import 'package:sample_diary/screens/calendar.dart';
 import 'package:sample_diary/screens/certificate.dart';
 import 'package:sample_diary/screens/map.dart';
 import 'package:sample_diary/screens/notes.dart';
-import 'package:sample_diary/screens/todo_item.dart';
 import 'package:sample_diary/screens/todolist.dart';
 
-void main() => runApp(MaterialApp(
-  home: RadialMenuIcons(),
-
-));
 class RadialMenuIcons extends StatelessWidget {
   const RadialMenuIcons({Key? key}) : super(key: key);
 
@@ -19,18 +14,15 @@ class RadialMenuIcons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text("My Diary"),
-
+        title: const Text("My Diary"),
         centerTitle: true,
       ),
       body: RadialMenu(children: [
-
         RadialButton(
             icon: Icon(Icons.map_outlined),
-            buttonColor :  Colors.teal,
+            buttonColor: Colors.teal,
             onPress: () => Navigator.push(
                 context, MaterialPageRoute(builder: (_) => MapScreen()))),
         RadialButton(
@@ -58,18 +50,10 @@ class RadialMenuIcons extends StatelessWidget {
             buttonColor: Colors.indigo,
             onPress: () => Navigator.push(
                 context, MaterialPageRoute(builder: (_) => NotesPage()))),
-
-      ]
-      ),
-
-
-
+      ]),
     );
-
   }
-
 }
-
 
 class TargetScreen extends StatelessWidget {
   const TargetScreen({Key? key}) : super(key: key);
@@ -77,7 +61,7 @@ class TargetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Target Screen")),
+      appBar: AppBar(title: const Text("Target Screen")),
     );
   }
 }

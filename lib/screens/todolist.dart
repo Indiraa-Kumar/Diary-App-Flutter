@@ -25,21 +25,23 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
-      appBar: _buildAppBar(),
+      appBar: AppBar(
+        title: const Text('Todo works'),
+      ),
       body: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 15,
         ),
         child: Column(
           children: [
-            //searchBox(),
+            searchBox(),
             Expanded(
               child: ListView(
                 children: [
                   Container(
                     margin: EdgeInsets.only(
-                      top: 50,
+                      top: 30,
                       bottom: 20,
                     ),
                     child: Text(
@@ -149,8 +151,8 @@ class _HomeState extends State<Home> {
     } else {
       results = todosList
           .where((item) => item.todoText!
-          .toLowerCase()
-          .contains(enteredKeyword.toLowerCase()))
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
           .toList();
     }
 
@@ -189,7 +191,7 @@ class _HomeState extends State<Home> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: tdBGColor,
+      // backgroundColor: tdBGColor,
       elevation: 0,
       title: Row(children: [
         Expanded(child: searchBox()),
@@ -206,7 +208,8 @@ class _HomeState extends State<Home> {
           width: 40,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset('images/profile_pic.jpg'),
+            // child: Image.asset('images/profile_pic.png'),
+            child: Image.asset('images/google.png'),
           ),
         ),
       ]),
