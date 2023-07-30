@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'NotesPage.dart';
 
 class NotesPage extends StatefulWidget {
-  NotesPage({Key? key}) : super(key: key);
+  const NotesPage({Key? key}) : super(key: key);
 
   @override
-  _NotesPageState createState() => _NotesPageState();
+  State<NotesPage> createState() => _NotesPageState();
 }
 
 class _NotesPageState extends State<NotesPage> {

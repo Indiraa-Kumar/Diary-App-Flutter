@@ -3,14 +3,14 @@ import 'package:sample_diary/screens/todo.dart';
 import 'package:sample_diary/screens/todo_item.dart';
 import '../constants/colors.dart';
 
-class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+class TodoPage extends StatefulWidget {
+ const TodoPage({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<TodoPage> createState() => _TodoPageState();
 }
 
-class _HomeState extends State<Home> {
+class _TodoPageState extends State<TodoPage> {
   final todosList = ToDo.todoList();
   List<ToDo> _foundToDo = [];
   final _todoController = TextEditingController();

@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  animated_radial_menu:
   google_maps_flutter: ^2.3.1
   dio: ^5.2.1+1
   flutter_polyline_points: ^1.0.0
@@ -39,6 +38,7 @@ dependencies:
   location: ^4.2.0
   google_sign_in: ^6.1.4
   firebase_auth: ^4.7.0
+  flutter_local_notifications: ^15.1.0+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

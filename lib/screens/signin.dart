@@ -1,11 +1,13 @@
-import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sample_diary/screens/home.dart';
 import 'package:sample_diary/screens/singup.dart';
 
+import 'home.dart';
+
 class SignIn extends StatefulWidget {
+  const SignIn({super.key});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -152,22 +154,21 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(height: 40.0),
-                        Container(
-                          height: 40.0,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: Colors.greenAccent,
-                            color: Colors.green,
-                            elevation: 7.0,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RadialMenuIcons(),
-                                    ));
-                              },
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginHomePage(),
+                                ));
+                          },
+                          child: Container(
+                            height: 40.0,
+                            child: Material(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shadowColor: Colors.greenAccent,
+                              color: Colors.green,
+                              elevation: 7.0,
                               child: Center(
                                 child: Text(
                                   'LOGIN',
