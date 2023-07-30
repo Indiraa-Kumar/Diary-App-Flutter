@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
@@ -245,13 +246,13 @@ class _AchievementPageState extends State<AchievementPage> {
     } else {
       _controller.play();
       isPlaying = !isPlaying;
-      /* final timer = Timer(
+      Timer(
         const Duration(seconds: 2),
         () {
           isPlaying = !isPlaying;
           _controller.stop();
         },
-      ); */
+      );
     }
   }
 
@@ -262,46 +263,21 @@ class _AchievementPageState extends State<AchievementPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text('Achievements'),
+            title: const Text('Achievements'),
             centerTitle: true,
+            automaticallyImplyLeading: false,
           ),
           body: _buildList(),
-
-          //       body: Center(
-          //
-          //           child: ElevatedButton(
-          //             style: ButtonStyle(
-          //                 backgroundColor: MaterialStateProperty.all(Colors.red),
-          //                 padding: MaterialStateProperty.all(EdgeInsets.all(30)),
-          //                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          //                   borderRadius: BorderRadius.circular(50),
-          //                 )),
-          //                 textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15))),
-          //           onPressed: (){
-          //             if(isPlaying) {
-          //               _controller.stop();
-          //             }
-          //             else{
-          //               _controller.play();
-          //             }
-          //             isPlaying = !isPlaying;
-          //             },
-          //             child: Text('Celebrate the achievement'),
-          //             //color: Colors.deepPurpleAccent,
-          //
-          //
-          // ),
-          //       ),
           floatingActionButton: FloatingActionButton(
             onPressed: _addToList,
-            child: Icon(Icons.add),
             tooltip: 'Add a achievement',
+            child: const Icon(Icons.add),
           ),
         ),
         ConfettiWidget(
           confettiController: _controller,
           blastDirection: pi / 2,
-          colors: [
+          colors: const [
             Colors.deepPurple,
             Colors.yellowAccent,
             Colors.pinkAccent,

@@ -4,7 +4,7 @@ import 'package:sample_diary/screens/todo_item.dart';
 import '../constants/colors.dart';
 
 class TodoPage extends StatefulWidget {
- const TodoPage({Key? key}) : super(key: key);
+  const TodoPage({Key? key}) : super(key: key);
 
   @override
   State<TodoPage> createState() => _TodoPageState();
@@ -26,7 +26,9 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: AppBar(
-        title: const Text('Todo works'),
+        title: const Text('Todo'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(

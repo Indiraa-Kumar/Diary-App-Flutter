@@ -28,9 +28,9 @@ class _LoginHomePageState extends State<LoginHomePage> {
     Calendar(),
     MapScreen(),
     TodoPage(),
+    AchievementPage(),
     NotesPage(),
     CertificatePage(),
-    AchievementPage(),
   ];
 
   @override
@@ -53,7 +53,7 @@ class _LoginHomePageState extends State<LoginHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_outlined),
-            label: 'Calender',
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map_outlined),
@@ -64,16 +64,16 @@ class _LoginHomePageState extends State<LoginHomePage> {
             label: 'Todo',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_chart),
-            label: 'Certificates',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
             label: 'Achievements',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.note_alt),
             label: 'Notes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_chart),
+            label: 'Certificates',
           ),
         ],
       ),

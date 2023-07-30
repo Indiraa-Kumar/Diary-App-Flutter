@@ -15,10 +15,15 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   late Animation animation, delayedAnimation, muchDelayedAnimation;
   late AnimationController animationController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  bool obscureText = true;
 
   @override
   void initState() {
     super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     animationController =
         AnimationController(duration: const Duration(seconds: 3), vsync: this);
     // it flying from left side towards center
@@ -37,6 +42,13 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       parent: animationController,
       curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn),
     ));
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   void signInWithGoogle() async {
@@ -122,6 +134,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.green)),
                           ),
+                          controller: emailController,
                         ),
                         SizedBox(height: 20.0),
                         TextField(
@@ -132,10 +145,22 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
                             ),
+                            suffixIconColor: Colors.grey,
+                            suffixIcon: InkWell(
+                              child: Icon(!obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onTap: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                            ),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.green)),
                           ),
-                          obscureText: true,
+                          obscureText: obscureText,
+                          controller: passwordController,
                         ),
                         SizedBox(height: 5.0),
                         Container(
@@ -156,6 +181,28 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         SizedBox(height: 40.0),
                         GestureDetector(
                           onTap: () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            String email = emailController.text;
+                            String pswd = passwordController.text;
+                            if (email.isEmpty) {
+                              showToast(
+                                  context: context,
+                                  message: "Email id cannot be empty");
+                              return;
+                            } else if (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(email)) {
+                              showToast(
+                                  context: context,
+                                  message: "Enter a valid email id");
+                              return;
+                            } else if (pswd.isEmpty) {
+                              showToast(
+                                  context: context,
+                                  message: "Password cannot be empty");
+                              return;
+                            }
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -259,5 +306,17 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
             ),
           );
         });
+  }
+
+  static void showToast(
+      {required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text("$message"),
+        margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30),
+        duration: Duration(milliseconds: 2000),
+      ),
+    );
   }
 }

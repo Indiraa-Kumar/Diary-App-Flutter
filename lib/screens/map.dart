@@ -31,8 +31,9 @@ class _MapScreenState extends State<MapScreen> {
     _googleMapController.dispose();
     super.dispose();
   }
+
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     //fetchLocation();
   }
@@ -61,9 +62,8 @@ class _MapScreenState extends State<MapScreen> {
     _liveposition = Marker(
       markerId: const MarkerId('Live position'),
       infoWindow: const InfoWindow(title: 'Live position'),
-      icon:
-      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      position: LatLng(_currentPosition.latitude!,_currentPosition.longitude!),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      position: LatLng(_currentPosition.latitude!, _currentPosition.longitude!),
     );
     return '';
     // location.onLocationChanged.listen((LocationData currentLocation) {
@@ -83,7 +83,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: false,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         title: const Text('Google Maps'),
         actions: [
           if (_origin != null)
@@ -132,11 +133,12 @@ class _MapScreenState extends State<MapScreen> {
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   initialCameraPosition: _initialCameraPosition,
-                  onMapCreated: (controller) => _googleMapController = controller,
+                  onMapCreated: (controller) =>
+                      _googleMapController = controller,
                   markers: {
                     if (_origin != null) _origin!,
                     if (_destination != null) _destination!,
-                    if(_liveposition != null) _liveposition!
+                    if (_liveposition != null) _liveposition!
                   },
                   polylines: {
                     if (_info != null)
@@ -181,8 +183,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
               ],
             );
-          }
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.black,
@@ -191,7 +192,7 @@ class _MapScreenState extends State<MapScreen> {
               ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
               : CameraUpdate.newCameraPosition(_initialCameraPosition),
         ),
-        child: const Icon(Icons.center_focus_strong),
+        child: const Icon(Icons.gps_fixed),
       ),
     );
   }
@@ -205,7 +206,7 @@ class _MapScreenState extends State<MapScreen> {
           markerId: const MarkerId('origin'),
           infoWindow: const InfoWindow(title: 'Origin'),
           icon:
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           position: pos,
         );
         // Reset destination
@@ -225,7 +226,7 @@ class _MapScreenState extends State<MapScreen> {
           position: pos,
         );
       });
-      if(_origin!=null) {
+      if (_origin != null) {
         // Get directions
         final directions = await DirectionsRepository(dio: Dio())
             .getDirections(origin: _origin!.position, destination: pos);

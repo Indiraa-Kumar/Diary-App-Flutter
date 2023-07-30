@@ -18,6 +18,17 @@ class CertificatePageState extends State<CertificatePage> {
 
   // Build the whole list of todo items
   Widget _buildList() {
+    if (_certificateItems.isEmpty) {
+      return const Center(
+        child: Text(
+          'No certifications has been added...',
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            fontSize: 16,
+          ),
+        ),
+      );
+    }
     return ListView.builder(
         itemCount: _certificateItems.length,
         itemBuilder: (context, index) {
@@ -151,8 +162,9 @@ class CertificatePageState extends State<CertificatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Certifications'),
+        title: const Text('Certifications'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: _buildList(),
       floatingActionButton: FloatingActionButton(

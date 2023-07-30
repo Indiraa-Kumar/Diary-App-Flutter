@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample_diary/screens/signin.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,11 +10,33 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _status = true;
-  final FocusNode myFocusNode = FocusNode();
+  late TextEditingController emailController;
+  late TextEditingController nameController;
+  late TextEditingController mobileController;
+  late TextEditingController pincodeController;
+  late TextEditingController stateController;
+
+  @override
+  void initState() {
+    emailController = TextEditingController(text: "indiraa7274@gmail.com");
+    nameController = TextEditingController(text: "Indhiraa");
+    mobileController = TextEditingController(text: "9098765432");
+    pincodeController = TextEditingController(text: "632292");
+    stateController = TextEditingController(text: "Tamil Nadu");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -21,34 +44,47 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: <Widget>[
             Container(
-              height: _height * 0.30,
-              width: _width,
+              height: height * 0.30,
+              width: width,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('images/profile_background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Center(
-                child: CircleAvatar(
-                  backgroundImage: const AssetImage('images/profile_pic.png'),
-                  radius: _height * 0.085,
-                ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      backgroundImage:
+                          const AssetImage('images/profile_pic.png'),
+                      radius: height * 0.085,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignIn(),
+                              ));
+                        },
+                        icon: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        )),
+                  )
+                ],
               ),
             ),
             Transform.translate(
               offset: const Offset(0, -35),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black45,
-                            blurRadius: 2.0,
-                            offset: Offset(0.0, 2.0))
-                      ]),
+                child: Card(
+                  color: Colors.grey[200],
                   child: const Padding(
                     padding: EdgeInsets.all(12),
                     child: Column(
@@ -58,8 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         Text(
                           "Today's Quotes:",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold, fontSize: 14),
                         ),
+                        SizedBox(height: 7),
                         Text(
                           "\t\t\t\t\t\t“Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.” —Dale Carnegie",
                           style: TextStyle(
@@ -131,6 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                     enabled: !_status,
                                     autofocus: !_status,
+                                    controller: nameController,
                                   ),
                                 ),
                               ],
@@ -164,6 +202,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter Email ID"),
                                     enabled: !_status,
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: emailController,
                                   ),
                                 ),
                               ],
@@ -197,6 +237,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter Mobile Number"),
                                     enabled: !_status,
+                                    keyboardType: TextInputType.phone,
+                                    controller: mobileController,
                                   ),
                                 ),
                               ],
@@ -241,6 +283,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       decoration: const InputDecoration(
                                           hintText: "Enter Pin Code"),
                                       enabled: !_status,
+                                      keyboardType: TextInputType.number,
+                                      controller: pincodeController,
                                     ),
                                   ),
                                 ),
@@ -250,6 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter State"),
                                     enabled: !_status,
+                                    controller: stateController,
                                   ),
                                 ),
                               ],

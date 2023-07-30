@@ -31,15 +31,20 @@ class _NotesPageState extends State<NotesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notes"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: noteHeading.isNotEmpty
           ? buildNotes()
-          : const Center(child: Text('No notes has been added...',
-        style: TextStyle(
-          fontStyle: FontStyle.italic,
-          fontSize: 18,
-        ),
-      ),),
+          : const Center(
+              child: Text(
+                'No notes has been added...',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 18,
+                ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         mini: false,
         backgroundColor: Colors.blueAccent,

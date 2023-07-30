@@ -37,8 +37,9 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calendar"),
+        title: const Text("Calendar"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -106,7 +107,7 @@ class _CalendarState extends State<Calendar> {
             ),
           ),
           ..._getEventsfromDay(selectedDay).map(
-                (Event event) => ListTile(
+            (Event event) => ListTile(
               title: Text(
                 event.title,
               ),
@@ -131,7 +132,6 @@ class _CalendarState extends State<Calendar> {
                 child: Text("Ok"),
                 onPressed: () {
                   if (_eventController.text.isEmpty) {
-
                   } else {
                     if (selectedEvents[selectedDay] != null) {
                       selectedEvents[selectedDay]?.add(
@@ -142,11 +142,10 @@ class _CalendarState extends State<Calendar> {
                         Event(title: _eventController.text)
                       ];
                     }
-
                   }
                   Navigator.pop(context);
                   _eventController.clear();
-                  setState((){});
+                  setState(() {});
                   return;
                 },
               ),

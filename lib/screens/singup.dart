@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
-  _SignUpState createState() => _SignUpState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp>
-    with SingleTickerProviderStateMixin {
+class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
   late Animation animation, delayedAnimation;
   late AnimationController animationController;
 
@@ -14,9 +15,7 @@ class _SignUpState extends State<SignUp>
   void initState() {
     super.initState();
     animationController =
-        AnimationController(duration: Duration(seconds: 3), vsync: this);
-    // it flying from left side towards center
-    // -ve value mean it start from left side
+        AnimationController(duration: const Duration(seconds: 3), vsync: this);
     animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
       parent: animationController,
       curve: Curves.fastOutSlowIn,
@@ -24,7 +23,7 @@ class _SignUpState extends State<SignUp>
 
     delayedAnimation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
       parent: animationController,
-      curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
     ));
   }
 
