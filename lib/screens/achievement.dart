@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -259,13 +257,13 @@ class AchievementPageState extends State<AchievementPage> {
     } else {
       _controller.play();
       isPlaying = !isPlaying;
-      final timer = Timer(
+      /* final timer = Timer(
         const Duration(seconds: 2),
         () {
           isPlaying = !isPlaying;
           _controller.stop();
         },
-      );
+      ); */
     }
   }
 

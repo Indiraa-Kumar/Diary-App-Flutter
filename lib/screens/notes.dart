@@ -423,6 +423,7 @@ class _NotesPageState extends State<NotesPage> {
                                                 .startsWith(" ")) {
                                               return "Please avoid whitespaces";
                                             }
+                                            return null;
                                           },
                                           onFieldSubmitted: (String value) {
                                             FocusScope.of(context).requestFocus(
@@ -442,7 +443,7 @@ class _NotesPageState extends State<NotesPage> {
                                               maxLength: 200,
                                               controller:
                                                   noteDescriptionController,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 hintText: 'Description',
                                                 hintStyle: TextStyle(
@@ -459,6 +460,7 @@ class _NotesPageState extends State<NotesPage> {
                                                     .startsWith(" ")) {
                                                   return "Please avoid whitespaces";
                                                 }
+                                                return null;
                                               },
                                             ),
                                           ),

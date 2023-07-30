@@ -41,6 +41,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     try {
       print("call google login");
       FirebaseAuth auth = FirebaseAuth.instance;
+      // ignore: unused_local_variable
       User? user;
 
       final GoogleSignIn googleSignIn = GoogleSignIn();

@@ -25,7 +25,7 @@ class CertificatePage extends StatefulWidget {
 }
 
 class CertificatePageState extends State<CertificatePage> {
-  List<CertificateDetails> _certificateItems = [];
+  final List<CertificateDetails> _certificateItems = [];
 
   // This will be called each time the + button is pressed
   void _addCertificate(CertificateDetails task) {
@@ -35,18 +35,18 @@ class CertificatePageState extends State<CertificatePage> {
 
   // Build the whole list of todo items
   Widget _buildList() {
-    return ListView.builder(itemBuilder: (context, index) {
-      if (index < _certificateItems.length) {
-        return _buildWithItem(_certificateItems[index], index);
-      }
-    });
+    return ListView.builder(
+        itemCount: _certificateItems.length,
+        itemBuilder: (context, index) {
+          return _buildWithItem(_certificateItems[index], index);
+        });
   }
 
   Widget _buildWithItem(CertificateDetails details, int index) {
     return ListTile(
         title: Text(details.name),
         trailing: ActionChip(
-          label: Icon(Icons.delete),
+          label: const Icon(Icons.delete),
           backgroundColor: Colors.transparent,
           onPressed: () {
             _clickToRemove(index);
@@ -58,85 +58,85 @@ class CertificatePageState extends State<CertificatePage> {
   void _addToList() {
     // Push this page onto the stack
     Navigator.of(context).push(
-      // MaterialPageRoute will automatically animate the screen entry, as well
-      // as adding a back button to close it
+        // MaterialPageRoute will automatically animate the screen entry, as well
+        // as adding a back button to close it
         MaterialPageRoute(builder: (context) {
-          CertificateDetails details = CertificateDetails();
-          return Scaffold(
-              appBar: AppBar(
-                title: Text('Add a certificate'),
-                centerTitle: true,
+      CertificateDetails details = CertificateDetails();
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Add a certificate'),
+            centerTitle: true,
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) => details.name = value,
+                  decoration: InputDecoration(
+                    labelText: "Certification name",
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter your certificate name',
+                  ),
+                ),
               ),
-              body: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value) => details.name = value,
-                      decoration: InputDecoration(
-                        labelText: "Certification name",
-                        border: OutlineInputBorder(),
-                        hintText: 'Enter your certificate name',
-                      ),
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) => details.provider = value,
+                  decoration: InputDecoration(
+                    labelText: "Certification provider",
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter provider',
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value) => details.provider = value,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter refreshState) {
+                  return TextField(
+                      controller: () {
+                        print("date");
+                        return TextEditingController(text: details.expirydate);
+                      }(),
+                      //onChanged: (value) => details.expirydate = value,
                       decoration: InputDecoration(
-                        labelText: "Certification provider",
+                        labelText: "Validity",
                         border: OutlineInputBorder(),
-                        hintText: 'Enter provider',
+                        hintText: 'Mention date',
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: StatefulBuilder(
-                        builder: (BuildContext context, StateSetter refreshState) {
-                          return TextField(
-                              controller: () {
-                                print("date");
-                                return TextEditingController(text: details.expirydate);
-                              }(),
-                              //onChanged: (value) => details.expirydate = value,
-                              decoration: InputDecoration(
-                                labelText: "Validity",
-                                border: OutlineInputBorder(),
-                                hintText: 'Mention date',
-                              ),
-                              onTap: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(
-                                        2000), //DateTime.now() - not to allow to choose before today.
-                                    lastDate: DateTime(2101));
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(
+                                2000), //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2101));
 
-                                if (pickedDate != null) {
-                                  details.expirydate = pickedDate.year.toString() +
-                                      "-" +
-                                      pickedDate.month.toString() +
-                                      "-" +
-                                      pickedDate.day.toString();
-                                  refreshState(() {});
-                                }
-                              });
-                        }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        child: Text("  Done  "),
-                        onPressed: () {
-                          _addCertificate(details);
-                          Navigator.pop(context);
-                        }),
-                  )
-                ],
-              ));
-        }));
+                        if (pickedDate != null) {
+                          details.expirydate = pickedDate.year.toString() +
+                              "-" +
+                              pickedDate.month.toString() +
+                              "-" +
+                              pickedDate.day.toString();
+                          refreshState(() {});
+                        }
+                      });
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: Text("  Done  "),
+                    onPressed: () {
+                      _addCertificate(details);
+                      Navigator.pop(context);
+                    }),
+              )
+            ],
+          ));
+    }));
   }
 
   void _removeItem(int index) {
@@ -191,4 +191,3 @@ class CertificateDetails {
   String provider;
   String expirydate;
 }
-
