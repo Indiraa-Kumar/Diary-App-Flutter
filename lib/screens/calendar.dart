@@ -168,13 +168,13 @@ class _CalendarState extends State<Calendar> {
                               NotificationService().scheduleNotification(
                                   title: _eventController.text,
                                   body:
-                                      'Added a scheduled event on ${scheduleTime!.day}/${scheduleTime!.month}/${scheduleTime!.year} ${scheduleTime!.hour}:${scheduleTime!.minute}',
+                                      'Scheduled event added on ${scheduleTime!.day}/${scheduleTime!.month}/${scheduleTime!.year} ${scheduleTime!.hour}:${scheduleTime!.minute}',
                                   scheduledNotificationDateTime: scheduleTime!);
                             } else {
                               NotificationService().showNotification(
                                   title: _eventController.text,
                                   body:
-                                      'Added a new event on ${selectedDay.day}/${selectedDay.month}/${selectedDay.year}');
+                                      'New event added on ${selectedDay.day}/${selectedDay.month}/${selectedDay.year}');
                             }
                           }
                           Navigator.pop(context);
