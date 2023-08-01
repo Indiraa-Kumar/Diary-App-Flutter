@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sample_diary/screens/signin.dart';
+import 'package:sample_diary/utils/utils.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,6 +13,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _status = true;
+  Uint8List? _image;
+
   late TextEditingController emailController;
   late TextEditingController nameController;
   late TextEditingController mobileController;
@@ -31,6 +36,24 @@ class _ProfilePageState extends State<ProfilePage> {
     emailController.dispose();
     nameController.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    ImagePicker? _picker = ImagePicker();
+    try {
+      XFile? file = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 60,
+        maxWidth: 1080,
+        maxHeight: 1080,
+      );
+      Uint8List imageBytes = await file!.readAsBytes();
+      setState(() {
+        _image = imageBytes;
+      });
+    } catch (error) {
+      Utils.showToast(context: context, message: error.toString());
+    }
   }
 
   @override
@@ -55,10 +78,51 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Stack(
                 children: [
                   Center(
-                    child: CircleAvatar(
-                      backgroundImage:
-                          const AssetImage('images/profile_pic.jpg'),
-                      radius: height * 0.085,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2,
+                              color: Colors.lightBlueAccent,
+                              strokeAlign: BorderSide.strokeAlignOutside),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular((height * 0.085)),
+                          ),
+                          color: Colors.white),
+                      child: _image != null
+                          ? CircleAvatar(
+                              radius: height * 0.085,
+                              backgroundImage: MemoryImage(_image!),
+                            )
+                          : CircleAvatar(
+                              radius: height * 0.085,
+                              backgroundImage:
+                                  const AssetImage('images/profile_pic.jpg'),
+                            ),
+                    ),
+                  ),
+                  Positioned(
+                    top: height * 0.15 + (height * 0.05),
+                    left: width * 0.5 + (width * 0.05),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.lightBlueAccent,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(50),
+                          ),
+                          color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: InkWell(
+                          onTap: selectImage,
+                          focusColor: Colors.red,
+                          child: const Icon(
+                            Icons.add_a_photo,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Align(

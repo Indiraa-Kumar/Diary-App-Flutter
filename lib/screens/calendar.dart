@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample_diary/services/notifications.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './event.dart';
 
@@ -14,6 +15,7 @@ class _CalendarState extends State<Calendar> {
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
+  DateTime? scheduleTime;
 
   TextEditingController _eventController = TextEditingController();
 
@@ -116,44 +118,76 @@ class _CalendarState extends State<Calendar> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Add Event"),
-            content: TextFormField(
-              controller: _eventController,
-            ),
-            actions: [
-              TextButton(
-                child: Text("Cancel"),
-                onPressed: () => Navigator.pop(context),
-              ),
-              TextButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  if (_eventController.text.isEmpty) {
-                  } else {
-                    if (selectedEvents[selectedDay] != null) {
-                      selectedEvents[selectedDay]?.add(
-                        Event(title: _eventController.text),
-                      );
-                    } else {
-                      selectedEvents[selectedDay] = [
-                        Event(title: _eventController.text)
-                      ];
-                    }
-                  }
-                  Navigator.pop(context);
-                  _eventController.clear();
-                  setState(() {});
-                  return;
-                },
-              ),
-            ],
-          ),
-        ),
-        label: Text("Add Event"),
-        icon: Icon(Icons.add),
+        onPressed: () {
+          scheduleTime = null;
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Add Event"),
+                    content: TextFormField(
+                      controller: _eventController,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                            onPressed: () async {
+                              final TimeOfDay? picked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (picked != null) {
+                                scheduleTime = DateTime(
+                                    selectedDay.year,
+                                    selectedDay.month,
+                                    selectedDay.day,
+                                    picked.hour,
+                                    picked.minute);
+                              }
+                            },
+                            icon: const Icon(Icons.schedule)),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text("Cancel"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      TextButton(
+                        child: Text("Ok"),
+                        onPressed: () {
+                          if (_eventController.text.isEmpty) {
+                          } else {
+                            if (selectedEvents[selectedDay] != null) {
+                              selectedEvents[selectedDay]?.add(
+                                Event(title: _eventController.text),
+                              );
+                            } else {
+                              selectedEvents[selectedDay] = [
+                                Event(title: _eventController.text)
+                              ];
+                            }
+                            if (scheduleTime != null) {
+                              NotificationService().scheduleNotification(
+                                  title: _eventController.text,
+                                  body:
+                                      'Added a scheduled event on ${scheduleTime!.day}/${scheduleTime!.month}/${scheduleTime!.year} ${scheduleTime!.hour}:${scheduleTime!.minute}',
+                                  scheduledNotificationDateTime: scheduleTime!);
+                            } else {
+                              NotificationService().showNotification(
+                                  title: _eventController.text,
+                                  body:
+                                      'Added a new event on ${selectedDay.day}/${selectedDay.month}/${selectedDay.year}');
+                            }
+                          }
+                          Navigator.pop(context);
+                          _eventController.clear();
+                          setState(() {});
+                          return;
+                        },
+                      ),
+                    ],
+                  ));
+        },
+        label: const Text("Add Event"),
+        icon: const Icon(Icons.add),
       ),
     );
   }

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sample_diary/screens/signin.dart';
+import 'package:sample_diary/services/notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
@@ -23,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginIn extends StatefulWidget {
-  LoginIn({Key? key}) : super(key: key);
+  const LoginIn({Key? key}) : super(key: key);
 
   @override
   State<LoginIn> createState() => _LoginInState();
@@ -40,63 +45,63 @@ class _LoginInState extends State<LoginIn> {
       body: Container(
         child: _isLoggedIn
             ? Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.network(_userObj.photoUrl!),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(_userObj.displayName!),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(_userObj.email),
-              const SizedBox(
-                height: 20,
-              ),
-              MaterialButton(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.network(_userObj.photoUrl!),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(_userObj.displayName!),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(_userObj.email),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        _googleSignIn.signOut().then((value) {
+                          setState(() {
+                            _isLoggedIn = false;
+                          });
+                        }).catchError((e) {});
+                      },
+                      height: 50,
+                      minWidth: 100,
+                      color: Colors.red,
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : Center(
+                child: MaterialButton(
                 onPressed: () {
-                  _googleSignIn.signOut().then((value) {
+                  _googleSignIn.signIn().then((userData) {
                     setState(() {
-                      _isLoggedIn = false;
+                      print("successful");
+                      print(userData);
+                      _isLoggedIn = true;
+                      _userObj = userData!;
                     });
-                  }).catchError((e) {});
+                  }).catchError((e) {
+                    print(e);
+                  });
                 },
                 height: 50,
                 minWidth: 100,
                 color: Colors.red,
                 child: const Text(
-                  'Logout',
+                  'Google Signin',
                   style: TextStyle(color: Colors.white),
                 ),
-              )
-            ],
-          ),
-        )
-            : Center(
-            child: MaterialButton(
-              onPressed: () {
-                _googleSignIn.signIn().then((userData) {
-                  setState(() {
-                    print("successful");
-                    print(userData);
-                    _isLoggedIn = true;
-                    _userObj = userData!;
-                  });
-                }).catchError((e) {
-                  print(e);
-                });
-              },
-              height: 50,
-              minWidth: 100,
-              color: Colors.red,
-              child: const Text(
-                'Google Signin',
-                style: TextStyle(color: Colors.white),
-              ),
-            )),
+              )),
       ),
     );
   }

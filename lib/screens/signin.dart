@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sample_diary/screens/singup.dart';
+import 'package:sample_diary/utils/utils.dart';
 
 import 'home.dart';
 
@@ -185,19 +186,19 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             String email = emailController.text;
                             String pswd = passwordController.text;
                             if (email.isEmpty) {
-                              showToast(
+                              Utils.showToast(
                                   context: context,
                                   message: "Email id cannot be empty");
                               return;
                             } else if (!RegExp(
                                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                 .hasMatch(email)) {
-                              showToast(
+                              Utils.showToast(
                                   context: context,
                                   message: "Enter a valid email id");
                               return;
                             } else if (pswd.isEmpty) {
-                              showToast(
+                              Utils.showToast(
                                   context: context,
                                   message: "Password cannot be empty");
                               return;
@@ -306,17 +307,5 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
             ),
           );
         });
-  }
-
-  static void showToast(
-      {required BuildContext context, required String message}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content: Text("$message"),
-        margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30),
-        duration: Duration(milliseconds: 2000),
-      ),
-    );
   }
 }
